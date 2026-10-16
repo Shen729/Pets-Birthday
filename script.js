@@ -645,6 +645,7 @@ function createWishGroup(wishes) {
 }
 
 // 渲染祝福，并保留两组循环动画
+
 function renderWishes() {
     wishTrack.innerHTML = "";
 
@@ -675,7 +676,7 @@ function renderWishes() {
     wishCount.textContent = `${allWishes.length} wishes`;
 }
 
-// 实时读取数据库；新祝福提交后会自动更新
+// 实时读取数据库
 const wishesQuery = query(
     wishesRef,
     orderBy("createdAt", "desc"),
@@ -698,26 +699,7 @@ onSnapshot(
     }
 );
 
-// 提交祝福
-sendWish.addEventListener("click", async () => {
-    const name = wishName.value.trim() || "Anonymous Fan";
-    const text = wishText.value.trim();
-
-    if (!text) {
-        alert("请先写下你的祝福 ♥");
-        return;
-    }
-
-    if (name.length > 40 || text.length > 500) {
-        alert("昵称最多 40 个字符，祝福最多 500 个字符。");
-        return;
-    }
-
-    sendWish.disabled = true;
-
-   
-
- // 提交祝福
+// 提交祝福：只保留这一个事件监听器
 sendWish.addEventListener("click", async () => {
     const name = wishName.value.trim() || "Anonymous Fan";
     const text = wishText.value.trim();
