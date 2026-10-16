@@ -716,34 +716,54 @@ sendWish.addEventListener("click", async () => {
     sendWish.disabled = true;
 
    
-try {
-    console.log("准备提交祝福", {
-        projectId: firebaseConfig.projectId,
-        name,
-        text
-    });
 
-    const docRef = await addDoc(wishesRef, {
-        name,
-        text,
-        createdAt: serverTimestamp()
-    });
+ // 提交祝福
+sendWish.addEventListener("click", async () => {
+    const name = wishName.value.trim() || "Anonymous Fan";
+    const text = wishText.value.trim();
 
-    console.log("Firestore 写入成功，文档 ID：", docRef.id);
+    if (!text) {
+        alert("请先写下你的祝福 ♥");
+        return;
+    }
 
-    wishName.value = "";
-    wishText.value = "";
+    if (name.length > 40 || text.length > 500) {
+        alert("昵称最多 40 个字符，祝福最多 500 个字符。");
+        return;
+    }
 
-    alert("祝福已保存到云端！记录编号：" + docRef.id);
-} catch (error) {
-    console.error("Firestore 写入失败：", error);
+    sendWish.disabled = true;
 
-    alert(
-        "祝福保存失败！\n" +
-        "错误代码：" + (error.code || "未知") +
-        "\n错误信息：" + error.message
-    );
-} finally {
-    sendWish.disabled = false;
-}
+    try {
+        console.log("准备提交祝福", {
+            projectId: firebaseConfig.projectId,
+            name,
+            text
+        });
+
+        const docRef = await addDoc(wishesRef, {
+            name,
+            text,
+            createdAt: serverTimestamp()
+        });
+
+        console.log("Firestore 写入成功，文档 ID：", docRef.id);
+
+        wishName.value = "";
+        wishText.value = "";
+
+        alert("祝福已保存到云端！记录编号：" + docRef.id);
+
+    } catch (error) {
+        console.error("Firestore 写入失败：", error);
+
+        alert(
+            "祝福保存失败！\n" +
+            "错误代码：" + (error.code || "未知") +
+            "\n错误信息：" + error.message
+        );
+
+    } finally {
+        sendWish.disabled = false;
+    }
 });
