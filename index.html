@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Happy Birthday Pets ♥</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<header class="navbar">
+
+    <div class="logo">
+        PETS<span>♥</span>
+    </div>
+
+    <nav>
+        <a href="#home">首页</a>
+        <a href="#about">简介</a>
+        <a href="#music">歌曲</a>
+        <a href="#drama">影视</a>
+        <a href="#chengfeng">浪姐舞台</a>
+        <a href="#wishes">祝福墙</a>
+    </nav>
+
+</header>
+
+
+<!-- =========================
+     HOME
+========================= -->
+
+<section id="home" class="home">
+
+    <img
+        src="assets/hero.jpg"
+        alt="曾沛慈生日应援海报"
+        class="hero-poster"
+    >
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section id="about" class="about-section">
+
+
+    <div class="section-title">
+        <span>ABOUT</span>
+        <h2>关于 Pets</h2>
+    </div>
+
+
+    <div class="about-main">
+
+        <!-- 左边图片 -->
+
+        <div class="about-image">
+
+            <img
+                src="assets/about.jpg"
+                alt="曾沛慈"
+            >
+
+        </div>
+
+
+        <!-- 右边文字 -->
+
+        <div class="about-text">
+
+            <p class="about-name">
+                曾沛慈
+            </p>
+
+            <p class="about-en">
+                PETS TSENG
+            </p>
+
+            <p class="about-role">
+                生日: 1984.10.21 · 台湾省歌手，演员
+            </p>
+            <div class="about-awards-list">
+                <p>🏆 《乘风2026》年度总冠军</p>
+                <p>🏆 第二届《超级星光大道》第六名</p>
+                <p>🏆 第54届台湾电视金钟奖戏剧节目女配角奖（《我们与恶的距离》）</p>
+        </div>
+        
+            <div class="about-line"></div>
+
+            <p>
+                从歌手到演员，再到舞台上的表演者，
+                曾沛慈一直用自己的方式记录着成长。
+            </p>
+
+            <p>
+                她的声音拥有独特的辨识度，
+                而一个个不同的角色，也让更多人看见
+                她在舞台之外的另一面。
+            </p>
+
+            <p>
+                对喜欢她的人来说，
+                那些歌曲、角色和舞台，
+                也成为了青春里很特别的一部分。
+            </p>
+
+        </div>
+
+    </div>
+
+<!-- =========================
+     MUSIC
+========================= -->
+
+<section id="music" class="music-section">
+
+    <div class="section-title">
+
+        <span>MUSIC</span>
+
+        <h2>
+            音乐作品
+        </h2>
+
+        <p>
+            Every song tells a story.
+        </p>
+
+    </div>
+
+
+    <!-- 专辑 -->
+
+    <div id="albums" class="record-container"></div>
+
+
+    <!-- 专辑之外 -->
+
+    <div class="beyond-title">
+
+        <span>BEYOND ALBUMS</span>
+
+        <h2>
+            专辑之外
+        </h2>
+
+    </div>
+
+
+    <div id="singles" class="record-container"></div>
+
+</section>
+
+
+
+<!-- =========================
+     DRAMA
+========================= -->
+
+<section id="drama" class="drama-section">
+
+    <div class="section-title">
+
+        <span>FILM & TV</span>
+
+        <h2>
+            影视代表作品
+        </h2>
+
+        <p>
+            Click the title to explore.
+        </p>
+
+    </div>
+
+    <div id="dramas" class="drama-grid"></div>
+
+</section>
+
+
+
+
+<!-- =========================
+     CHENGFENG
+========================= -->
+
+<section id="chengfeng" class="chengfeng-section">
+
+    <div class="section-title light">
+        <span>乘风舞台</span>
+
+        <h2>STAGES OF PETS</h2>
+
+        <p>初舞台 → 一公 → 二公 → 三公 → 四公 → 五公 → 总决赛</p>
+    </div>
+
+    <!-- 13 个舞台卡片，由 script.js 自动生成 -->
+    <div id="stages"></div>
+
+</section>
+
+
+
+<!-- =========================
+     WISH WALL
+========================= -->
+
+<section id="wishes" class="wish-section">
+
+    <div class="section-title">
+
+        <span>WISH WALL</span>
+
+        <h2>
+            给 Pets 的祝福
+        </h2>
+
+        <p>
+            Leave your birthday message.
+        </p>
+
+    </div>
+
+
+    <div class="wish-form">
+
+        <input
+            type="text"
+            id="wishName"
+            placeholder="你的名字 / 昵称"
+            maxlength="20"
+        >
+
+        <textarea
+            id="wishText"
+            placeholder="写下你想对 Pets 说的话……"
+            maxlength="120"
+        ></textarea>
+
+        <button id="sendWish">
+            SEND LOVE ♥
+        </button>
+
+    </div>
+
+
+    <div class="wish-screen">
+
+        <div class="screen-top">
+            PETS BIRTHDAY WISH WALL
+        </div>
+
+        <div id="wishWall" class="wish-wall">
+
+            <div id="wishTrack" class="wish-track"></div>
+
+        </div>
+
+        <div class="screen-bottom">
+
+            <span>
+                ♥
+            </span>
+
+            <span id="wishCount">
+                0 wishes
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <div class="footer-logo">
+        PETS♥
+    </div>
+
+    <p>
+        For every song, every role, every stage.
+    </p>
+
+    <p class="copyright">
+        Made with love for Pets Tseng.
+    </p>
+
+</footer>
+
+
+<script type="module" src="script.js"></script>
+
+</body>
+</html>
