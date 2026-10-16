@@ -1,32 +1,14 @@
-import {
-    initializeApp
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import cloudbase from "https://esm.sh/@cloudbase/js-sdk@3";
 
-import {
-    getFirestore,
-    collection,
-    addDoc,
-    onSnapshot,
-    query,
-    orderBy,
-    serverTimestamp,
-    limit
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+const app = cloudbase.init({
+    env: "pets-birthday-d3gclbpb19516b395",
+    accessKey: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjlkMWRjMzFlLWI0ZDAtNDQ4Yi1hNzZmLWIwY2M2M2Q4MTQ5OCJ9.eyJpc3MiOiJodHRwczovL3BldHMtYmlydGhkYXktZDNnY2xicGIxOTUxNmIzOTUuYXAtc2hhbmdoYWkudGNiLWFwaS50ZW5jZW50Y2xvdWRhcGkuY29tIiwic3ViIjoiYW5vbiIsImF1ZCI6InBldHMtYmlydGhkYXktZDNnY2xicGIxOTUxNmIzOTUiLCJleHAiOjQwOTU4NTIyMTgsImlhdCI6MTc5MjE2OTAxOCwibm9uY2UiOiJteUgyRlloTVNfNmtWLTZXZTZCa1dnIiwiYXRfaGFzaCI6Im15SDJGWWhNU182a1YtNldlNkJrV2ciLCJuYW1lIjoiQW5vbnltb3VzIiwic2NvcGUiOiJhbm9ueW1vdXMiLCJwcm9qZWN0X2lkIjoicGV0cy1iaXJ0aGRheS1kM2djbGJwYjE5NTE2YjM5NSIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJ1c2VyX3R5cGUiOiIiLCJjbGllbnRfdHlwZSI6ImNsaWVudF91c2VyIiwiaXNfc3lzdGVtX2FkbWluIjpmYWxzZX0.Bxc6ruNmS8HyN-D7vyw893dsLWtvf_YGCqnNJi7Yh3NTLqw-yzi8oR3Sq543AHKS8z3DmKr7jnIWANM4hIoJURItS6fys694XPoFh5MaP7kOF6BWIisBgGwxeEc8p2MBXqgQeTj6mlmBWWMnA7ph8XeXn4hBiyt8FGKVcRISQVTaBfAjoRIutqVOjBIe8Iv_Cvod0wT1fTLMsgkWpN1n61emqk_FsXUgqnDkfiFwLdYqrBwJhWf8smnKG8J6YEynusOhsT4JFCs3QfqSJnEYJdDYQqOQXofCtFqBysmzV44_aYwWX01y5z_82lk70wtflxD7RrEPluqRhBf3Ksuv5w"
+});
 
-// 替换成 Firebase 控制台提供的配置
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyA_oIwxiXFNM9ow2phzWrYnartbTduUYFg",
-  authDomain: "pets-birthday.firebaseapp.com",
-  projectId: "pets-birthday",
-  storageBucket: "pets-birthday.firebasestorage.app",
-  messagingSenderId: "964815788904",
-  appId: "1:964815788904:web:46dc7f6c1c09cc6a7494dd",
-  measurementId: "G-WW6ZKXW562"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const auth = app.auth;
+const db = app.database();
 
+const wishesRef = db.collection("wishes");
 /* =========================================
    PETS BIRTHDAY WEBSITE
    JAVASCRIPT
@@ -605,7 +587,7 @@ if (stageContainer) {
 }
 
 /* =========================================
-   WISH WALL - FIREBASE
+   WISH WALL - CLOUDBASE
 ========================================= */
 
 const wishName = document.getElementById("wishName");
@@ -614,7 +596,7 @@ const sendWish = document.getElementById("sendWish");
 const wishTrack = document.getElementById("wishTrack");
 const wishCount = document.getElementById("wishCount");
 
-const wishesRef = collection(db, "wishes");
+const wishesRef = db.collection("wishes");
 
 let allWishes = [];
 
@@ -624,7 +606,6 @@ function safeText(text) {
     return div.innerHTML;
 }
 
-// 创建一组祝福卡片
 function createWishGroup(wishes) {
     const group = document.createElement("div");
     group.className = "wish-group";
@@ -644,12 +625,11 @@ function createWishGroup(wishes) {
     return group;
 }
 
-// 渲染祝福，并保留两组循环动画
-
 function renderWishes() {
+    if (!wishTrack || !wishCount) return;
+
     wishTrack.innerHTML = "";
 
-    // 暂时没有真实祝福时，显示示例卡片
     const displayWishes = allWishes.length
         ? allWishes
         : [
@@ -667,7 +647,6 @@ function renderWishes() {
             }
         ];
 
-    // 最多展示最新的 15 条
     const visibleWishes = displayWishes.slice(0, 15);
 
     wishTrack.appendChild(createWishGroup(visibleWishes));
@@ -676,76 +655,106 @@ function renderWishes() {
     wishCount.textContent = `${allWishes.length} wishes`;
 }
 
-// 实时读取数据库
-const wishesQuery = query(
-    wishesRef,
-    orderBy("createdAt", "desc"),
-    limit(100)
-);
-
-onSnapshot(
-    wishesQuery,
-    snapshot => {
-        allWishes = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-
-        renderWishes();
-    },
-    error => {
-        console.error("读取祝福失败：", error);
-        alert("暂时无法读取祝福，请稍后再试。");
-    }
-);
-
-// 提交祝福：只保留这一个事件监听器
-sendWish.addEventListener("click", async () => {
-    const name = wishName.value.trim() || "Anonymous Fan";
-    const text = wishText.value.trim();
-
-    if (!text) {
-        alert("请先写下你的祝福 ♥");
-        return;
-    }
-
-    if (name.length > 40 || text.length > 500) {
-        alert("昵称最多 40 个字符，祝福最多 500 个字符。");
-        return;
-    }
-
-    sendWish.disabled = true;
-
+// 从 CloudBase 读取最新的 100 条祝福
+async function loadWishes() {
     try {
-        console.log("准备提交祝福", {
-            projectId: firebaseConfig.projectId,
-            name,
-            text
-        });
+        const result = await wishesRef
+            .orderBy("createdAt", "desc")
+            .limit(100)
+            .get();
 
-        const docRef = await addDoc(wishesRef, {
-            name,
-            text,
-            createdAt: serverTimestamp()
-        });
+        allWishes = result.data || [];
+        renderWishes();
 
-        console.log("Firestore 写入成功，文档 ID：", docRef.id);
-
-        wishName.value = "";
-        wishText.value = "";
-
-        alert("祝福已保存到云端！记录编号：" + docRef.id);
-
+        console.log("CloudBase 读取成功，共", allWishes.length, "条祝福");
     } catch (error) {
-        console.error("Firestore 写入失败：", error);
+        console.error("CloudBase 读取祝福失败：", error);
+        renderWishes();
 
         alert(
-            "祝福保存失败！\n" +
-            "错误代码：" + (error.code || "未知") +
-            "\n错误信息：" + error.message
+            "暂时无法读取云端祝福。\n" +
+            "请检查安全域名、登录状态和数据库权限。\n" +
+            "错误信息：" + (error.message || error)
         );
-
-    } finally {
-        sendWish.disabled = false;
     }
-});
+}
+
+// 先匿名登录，再访问数据库
+async function initWishWall() {
+    try {
+        const { error } = await app.auth.signInAnonymously();
+
+        if (error) {
+            throw error;
+        }
+
+        console.log("CloudBase 匿名登录成功");
+        await loadWishes();
+    } catch (error) {
+        console.error("CloudBase 初始化或登录失败：", error);
+        renderWishes();
+
+        alert(
+            "祝福墙连接失败。\n" +
+            "请检查匿名登录是否已启用，以及安全域名是否已添加。\n" +
+            "错误信息：" + (error.message || error)
+        );
+    }
+}
+
+if (sendWish) {
+    sendWish.addEventListener("click", async () => {
+        const name = wishName.value.trim() || "Anonymous Fan";
+        const text = wishText.value.trim();
+
+        if (!text) {
+            alert("请先写下你的祝福 ♥");
+            return;
+        }
+
+        if (name.length > 40 || text.length > 500) {
+            alert("昵称最多 40 个字符，祝福最多 500 个字符。");
+            return;
+        }
+
+        sendWish.disabled = true;
+
+        try {
+            // 确保已登录后才能提交
+            const session = await app.auth.getSession();
+
+            if (!session?.data?.session) {
+                const { error } = await app.auth.signInAnonymously();
+
+                if (error) {
+                    throw error;
+                }
+            }
+
+            await wishesRef.add({
+                name,
+                text,
+                createdAt: Date.now()
+            });
+
+            wishName.value = "";
+            wishText.value = "";
+
+            await loadWishes();
+
+            alert("祝福已保存到 CloudBase！♥");
+        } catch (error) {
+            console.error("CloudBase 写入祝福失败：", error);
+
+            alert(
+                "祝福保存失败！\n" +
+                "错误信息：" + (error.message || error)
+            );
+        } finally {
+            sendWish.disabled = false;
+        }
+    });
+}
+
+renderWishes();
+initWishWall();
