@@ -596,7 +596,6 @@ const sendWish = document.getElementById("sendWish");
 const wishTrack = document.getElementById("wishTrack");
 const wishCount = document.getElementById("wishCount");
 
-const wishesRef = db.collection("wishes");
 
 let allWishes = [];
 
