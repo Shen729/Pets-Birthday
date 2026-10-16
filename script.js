@@ -741,7 +741,6 @@ if (sendWish) {
 
             await loadWishes();
 
-            alert("祝福已保存到 CloudBase！♥");
         } catch (error) {
             console.error("CloudBase 写入祝福失败：", error);
 
