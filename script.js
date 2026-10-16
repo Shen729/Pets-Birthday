@@ -746,4 +746,4 @@ try {
 } finally {
     sendWish.disabled = false;
 }
-
+});
