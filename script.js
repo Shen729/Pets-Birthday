@@ -715,19 +715,35 @@ sendWish.addEventListener("click", async () => {
 
     sendWish.disabled = true;
 
-    try {
-        await addDoc(wishesRef, {
-            name,
-            text,
-            createdAt: serverTimestamp()
-        });
+   
+try {
+    console.log("准备提交祝福", {
+        projectId: firebaseConfig.projectId,
+        name,
+        text
+    });
 
-        wishName.value = "";
-        wishText.value = "";
-    } catch (error) {
-        console.error("提交祝福失败：", error);
-        alert("提交失败，请检查网络后重试。");
-    } finally {
-        sendWish.disabled = false;
-    }
-});
+    const docRef = await addDoc(wishesRef, {
+        name,
+        text,
+        createdAt: serverTimestamp()
+    });
+
+    console.log("Firestore 写入成功，文档 ID：", docRef.id);
+
+    wishName.value = "";
+    wishText.value = "";
+
+    alert("祝福已保存到云端！记录编号：" + docRef.id);
+} catch (error) {
+    console.error("Firestore 写入失败：", error);
+
+    alert(
+        "祝福保存失败！\n" +
+        "错误代码：" + (error.code || "未知") +
+        "\n错误信息：" + error.message
+    );
+} finally {
+    sendWish.disabled = false;
+}
+
